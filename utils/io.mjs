@@ -1,5 +1,8 @@
 import * as readline from "node:readline"
 import { ANSI } from "./ansi.mjs";
+import * as readlinePromises from 'node:readline/promises';
+
+const rl = readlinePromises.createInterface({ input: process.stdin, output: process.stdout });
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) {
@@ -115,9 +118,13 @@ function printWithOffset(text, row, col) {
     print(output);
 }
 
+async function askQuestion(question) {
+    return await rl.question(question);
+}
+
 function clearScreen() {
     print(ANSI.CLEAR_SCREEN, ANSI.DELETE_SCREEN, ANSI.CURSOR_HOME, ANSI.RESTORE_CURSOR);
 }
 
 export default KeyBoardManager;
-export { print, printLine, printCenterd, clearScreen }
+export { print, printLine, printCenterd, clearScreen, askQuestion };

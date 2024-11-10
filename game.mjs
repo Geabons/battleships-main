@@ -6,79 +6,75 @@ import createMenu from "./utils/menu.mjs";
 import createMapLayoutScreen from "./game/mapLayoutScreen.mjs";
 import createInnBetweenScreen from "./game/innbetweenScreen.mjs";
 import createBattleshipScreen from "./game/battleshipsScreen.mjs";
+import { language, getLanguage, setLanguage } from "./utils/Dictionary.mjs";
+
 
 const MAIN_MENU_ITEMS = buildMenu();
 
-const GAME_FPS = 1000 / 60; // The theoretical refresh rate of our game engine
-const MIN_WIDTH = 80;
+const GAME_FPS = 1000 / 60;
 const MIN_HEIGHT = 24;
-let currentState = null; // The current active state in our finite-state machine.
-let gameLoop = null; // Variable that keeps a reference to the interval I assigned to our game loop
+const MIN_WIDTH = 80;
+let currentState = null;
+let gameLoop = null;
 let isPausedForResize = false;
 
 let mainMenuScene = null;
+
+setLanguage("en");
 
 function checkTerminalResolution() {
   const width = process.stdout.columns;
   const height = process.stdout.rows;
 
   if (width < MIN_WIDTH || height < MIN_HEIGHT) {
-    // Terminal is too small
     if (!isPausedForResize) {
       isPausedForResize = true;
       clearScreen();
-      print(`Terminal is too small! Please resize to at least ${MIN_WIDTH}x${MIN_HEIGHT}.\n`);
-      if (gameLoop) clearInterval(gameLoop); // Stop the game loop
+      print(getLanguage().TERMINAL_SIZE(MIN_WIDTH, MIN_HEIGHT));
+      if (gameLoop) clearInterval(gameLoop);
     }
     return false;
   } else {
-    // Terminal size is okay
     if (isPausedForResize) {
       isPausedForResize = false;
       clearScreen();
       print("Resizing detected. Resuming game...\n");
-      startGameLoop(); // Resume the game loop
+      startGameLoop();
     }
     return true;
   }
 }
 
-// Function to start the game loop
 function startGameLoop() {
-  if (gameLoop) clearInterval(gameLoop); // Clear any existing game loop to avoid duplicate loops
+  if (gameLoop) clearInterval(gameLoop);
   gameLoop = setInterval(update, GAME_FPS);
 }
 
-// Initialization function
 (function initialize() {
   print(ANSI.HIDE_CURSOR);
   clearScreen();
 
   mainMenuScene = createMenu(MAIN_MENU_ITEMS);
   SplashScreen.next = mainMenuScene;
-  currentState = SplashScreen; // Set the initial game state
+  currentState = SplashScreen;
 
-  // Check if the terminal size is adequate
   if (checkTerminalResolution()) {
-    startGameLoop(); // Start the game if terminal size is adequate
+    startGameLoop();
   } else {
     print("Waiting for adequate terminal size...\n");
   }
 
-  // Listen for terminal resize events and recheck size on resize
   process.stdout.on("resize", () => {
     checkTerminalResolution();
   });
 })();
 
-// Main game loop function
 function update() {
-  if (isPausedForResize) return; // Skip updates if paused for resize
+  if (isPausedForResize) return;
 
   currentState.update(GAME_FPS);
   currentState.draw(GAME_FPS);
 
-  // Check if we need to transition to a new state
   if (currentState.transitionTo != null) {
     currentState = currentState.next;
     print(ANSI.CLEAR_SCREEN, ANSI.CURSOR_HOME);
@@ -91,7 +87,7 @@ function buildMenu() {
   let menuItemCount = 0;
   return [
     {
-      text: "Start Game",
+      text: getLanguage().START_GAME,
       id: menuItemCount++,
       action: function () {
         clearScreen();
@@ -127,7 +123,7 @@ function buildMenu() {
       },
     },
     {
-      text: "Exit Game",
+      text: getLanguage().EXIT_GAME,
       id: menuItemCount++,
       action: function () {
         print(ANSI.SHOW_CURSOR);
@@ -135,5 +131,24 @@ function buildMenu() {
         process.exit();
       },
     },
+    {
+      text: getLanguage().CHANGE_LANGUAGE,
+      id: menuItemCount++,
+      action: function () {
+        const currentLanguage = getLanguage();
+        if (getLanguage() === language.en) {
+          setLanguage("no");
+        } else {
+          setLanguage("en");
+        }
+        print(getLanguage().LANGUAGE_CHANGED);
+        clearScreen();
+        mainMenuScene = createMenu(buildMenu()); 
+        currentState = mainMenuScene;
+      },
+    },
   ];
 }
+
+export { MIN_HEIGHT };
+export { MIN_WIDTH };
