@@ -27,9 +27,7 @@ const createBattleshipScreen = () => {
       secondPlayerBoard = secondPBoard;
     },
 
-    update: function (dt) {
-      //this.isDrawn = false;
-    },
+    update: function (dt) {},
 
     draw: function (dr) {
       if (this.isDrawn == false) {

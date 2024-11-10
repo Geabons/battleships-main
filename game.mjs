@@ -8,7 +8,6 @@ import createInnBetweenScreen from "./game/innbetweenScreen.mjs";
 import createBattleshipScreen from "./game/battleshipsScreen.mjs";
 import { language, getLanguage, setLanguage } from "./utils/Dictionary.mjs";
 
-
 const MAIN_MENU_ITEMS = buildMenu();
 
 const GAME_FPS = 1000 / 60;
@@ -143,7 +142,7 @@ function buildMenu() {
         }
         print(getLanguage().LANGUAGE_CHANGED);
         clearScreen();
-        mainMenuScene = createMenu(buildMenu()); 
+        mainMenuScene = createMenu(buildMenu());
         currentState = mainMenuScene;
       },
     },
