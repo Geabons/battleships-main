@@ -139,7 +139,6 @@ function buildMenu() {
         } else {
           setLanguage("en");
         }
-        print(getLanguage().LANGUAGE_CHANGED);
         clearScreen();
         mainMenuScene = createMenu(buildMenu());
         currentState = mainMenuScene;
