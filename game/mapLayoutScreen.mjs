@@ -4,6 +4,7 @@ import { print, clearScreen } from "../utils/io.mjs";
 import units from "./units.mjs";
 import KeyBoardManager from "../utils/io.mjs";
 import { create2DArrayWithFill } from "../utils/array.mjs";
+import { getLanguage } from "../game.mjs";
 
 ANSI.SEA__AND_SHIP = "\x1b[38;5;83;48;5;39m";
 ANSI.SEA = "\x1b[48;5;39m";
@@ -129,7 +130,7 @@ function createMapLayoutScreen() {
             this.ship = this.ships[this.currentShipIndex];
           } else {
             this.next = this.transitionFn();
-            this.transitionTo = "next state";
+            this.transitionTo = getLanguage().NEXT_STATE;
           }
         }
       }
@@ -143,7 +144,7 @@ function createMapLayoutScreen() {
 
       clearScreen();
 
-      let output = `${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}Ship Placement Phase\n\n${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}`;
+      let output = `${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}${getLanguage().SHIP_PLACEMENT}\n\n${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}`;
 
       output += "  ";
       for (let i = 0; i < GAME_BOARD_DIM; i++) {
@@ -177,12 +178,12 @@ function createMapLayoutScreen() {
       }
       output += "\n\n";
 
-      output += `${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}Controls:${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}\n`;
-      output += "Arrow keys: Move cursor\n";
-      output += "R: Rotate ship\n";
-      output += "Enter: Place ship\n";
+      output += `${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}${getLanguage().CONTROLS}${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}\n`;
+      output += getLanguage().ARROW_KEYS;
+      output += getLanguage().ROTATE;
+      output += getLanguage().PLACE_SHIP;
 
-      output += `\n${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}Ships to place:${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}\n`;
+      output += `\n${ANSI.TEXT.BOLD}${ANSI.COLOR.YELLOW}${getLanguage().SHIP_TO_PLACE}${ANSI.TEXT.BOLD_OFF}${ANSI.RESET}\n`;
       this.ships.forEach((ship, index) => {
         const status =
           index < this.currentShipIndex
@@ -190,7 +191,7 @@ function createMapLayoutScreen() {
             : index === this.currentShipIndex
             ? ">"
             : " ";
-        output += `${status} ${ship.id} (${ship.size} spaces)\n`;
+        output += `${status} ${ship.id} (${ship.size} ${getLanguage().SPACE})\n`;
       });
 
       print(output);

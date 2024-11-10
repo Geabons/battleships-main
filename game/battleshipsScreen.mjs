@@ -1,5 +1,6 @@
 import { GAME_BOARD_DIM, FIRST_PLAYER, SECOND_PLAYER } from "../consts.mjs";
 import { print } from "../utils/io.mjs";
+import { getLanguage } from "../game.mjs";
 
 const createBattleshipScreen = () => {
   let currentPlayer = FIRST_PLAYER;
@@ -33,7 +34,7 @@ const createBattleshipScreen = () => {
       if (this.isDrawn == false) {
         this.isDrawn = true;
 
-        print("There should be a battleship game here");
+        print(getLanguage().BATTLESHIP);
       }
     },
   };

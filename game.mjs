@@ -37,7 +37,6 @@ function checkTerminalResolution() {
     if (isPausedForResize) {
       isPausedForResize = false;
       clearScreen();
-      print("Resizing detected. Resuming game...\n");
       startGameLoop();
     }
     return true;
@@ -60,7 +59,7 @@ function startGameLoop() {
   if (checkTerminalResolution()) {
     startGameLoop();
   } else {
-    print("Waiting for adequate terminal size...\n");
+    print(getLanguage().WAITING_FOR_RESIZE);
   }
 
   process.stdout.on("resize", () => {
@@ -92,13 +91,13 @@ function buildMenu() {
         clearScreen();
         let innbetween = createInnBetweenScreen();
         innbetween.init(
-          `SHIP PLACMENT\nFirst player get ready.\nPlayer two look away`,
+          getLanguage().PLACE_BATTLESHIP_P1,
           () => {
             let p1map = createMapLayoutScreen();
             p1map.init(FIRST_PLAYER, (player1ShipMap) => {
               let innbetween = createInnBetweenScreen();
               innbetween.init(
-                `SHIP PLACEMENT\nSecond player get ready.\nPlayer one look away`,
+                getLanguage().PLACE_BATTLESHIP_P2,
                 () => {
                   let p2map = createMapLayoutScreen();
                   p2map.init(SECOND_PLAYER, (player2ShipMap) => {
@@ -118,7 +117,7 @@ function buildMenu() {
           3
         );
         currentState.next = innbetween;
-        currentState.transitionTo = "Map layout";
+        currentState.transitionTo = getLanguage().MAP;
       },
     },
     {
@@ -151,3 +150,4 @@ function buildMenu() {
 
 export { MIN_HEIGHT };
 export { MIN_WIDTH };
+export { getLanguage };

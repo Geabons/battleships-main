@@ -1,4 +1,6 @@
+import { getLanguage } from "../game.mjs";
 import { print, printCenterd } from "../utils/io.mjs";
+
 
 function createInnBetweenScreen() {
   return {
@@ -19,7 +21,7 @@ function createInnBetweenScreen() {
       this.displayTime -= dt;
       if (this.displayTime <= 0) {
         this.next = this.transitionFn();
-        this.transitionTo = "Transitioning away from innbetween screen";
+        this.transitionTo = getLanguage().IN_BETWEEN;
       }
     },
 
